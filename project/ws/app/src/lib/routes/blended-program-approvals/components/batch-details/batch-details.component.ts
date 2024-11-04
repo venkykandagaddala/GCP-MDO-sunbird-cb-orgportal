@@ -3,12 +3,13 @@ import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
 // tslint:disable-next-line:import-name
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { BlendedApporvalService } from '../../services/blended-approval.service'
 import { TelemetryEvents } from '../../../../head/_services/telemetry.event.model'
 import { EventService } from '@sunbird-cb/utils'
 import { NominateUsersDialogComponent } from '../nominate-users-dialog/nominate-users-dialog.component'
-import moment from 'moment'
+import * as moment from 'moment'
+
 import { NsContent } from '../../../../head/_services/widget-content.model'
 import { DialogConfirmComponent } from '../../../../../../../../../src/app/component/dialog-confirm/dialog-confirm.component'
 @Component({
@@ -97,15 +98,6 @@ export class BatchDetailsComponent implements OnInit {
 
   async getUsersCount() {
     if (this.batchData && this.batchData.batchId) {
-      // const req = {
-      //   serviceName: 'blendedprogram',
-      //   applicationStatus: '',
-      //   applicationIds: [
-      //     this.batchData.batchId,
-      //   ],
-      //   limit: 100,
-      //   offset: 0,
-      // }
       this.userscount = {
         enrolled: 0,
         totalApplied: 0,
@@ -124,17 +116,6 @@ export class BatchDetailsComponent implements OnInit {
         this.userscount.totalApplied = this.userscount.totalApplied + resData.result.data.length
       }
       return this.userscount
-      // await this.bpService.fetchBlendedUserCount(req).then(async (res: any) => {
-      //   if (res.result && res.result.data) {
-      //     const statusToNegate = ['WITHDRAWN', 'REMOVED', 'REJECTED']
-      //     await res.result.data.forEach((ele: any) => {
-      //       if (!statusToNegate.includes(ele.currentStatus)) {
-      //         this.userscount.totalApplied = this.userscount.totalApplied + ele.statusCount
-      //       }
-      //     })
-      //     return this.userscount
-      //   }
-      // })
     }
   }
 
@@ -286,7 +267,7 @@ export class BatchDetailsComponent implements OnInit {
         this.filter('rejected')
       }
       this.showUserDetails = false
-    },                                                      (error: any) => {
+    }, (error: any) => {
       this.openSnackbar(_.get(error, 'error.params.errmsg') ||
         _.get(error, 'error.result.errmsg') ||
         'Something went wrong, please try again later!')
