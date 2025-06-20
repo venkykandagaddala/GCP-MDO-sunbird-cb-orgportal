@@ -94,10 +94,12 @@
       aria-label="Analytics">
       <mat-icon class="margin-right-xs">create</mat-icon><span>Edit</span>
     </button>
-    <button (click)="deleteHandler(rowData)" mat-menu-item name="channel-analytics-button" class="ws-mat-primary-text"
-      aria-label="Analytics">
-      <mat-icon class="margin-right-xs">delete</mat-icon><span>Delete</span>
-    </button>
+    <ng-container *ngIf="!rowData.isEnabled">
+      <button (click)="deleteHandler(rowData)" mat-menu-item name="channel-analytics-button" class="ws-mat-primary-text"
+        aria-label="Analytics">
+        <mat-icon class="margin-right-xs">delete</mat-icon><span>Delete</span>
+      </button>
+    </ng-container>
   </ng-template>
 </mat-menu>
 

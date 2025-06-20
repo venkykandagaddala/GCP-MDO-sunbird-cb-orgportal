@@ -10,8 +10,9 @@ const API_ENDPOINTS = {
   DELETE: `/apis/proxies/v8/customFields/v1/delete`,
   READ: `/apis/proxies/v8/customFields/v1/read`,
   UPDATE: `/apis/proxies/v8/customFields/v1/update`,
-  UPDATE_STATUS: `/apis/proxies/v8/customFields/v1/status/update`
-
+  UPDATE_STATUS: `/apis/proxies/v8/customFields/v1/status/update`,
+  ENABLE_DISABLE_POPUP: `/apis/proxies/v8/customFields/v1/popup/update`,
+  READ_ORG_DETAILS: `api/org/v1/read`
 }
 
 @Injectable()
@@ -48,6 +49,14 @@ export class CustomFieldsService {
 
   updateList(filter: object): Observable<any> {
     return this.http.post<any>(`${API_ENDPOINTS.UPDATE_LIST}`, filter)
+  }
+
+  updatePopup(request: object): Observable<any> {
+    return this.http.post<any>(`${API_ENDPOINTS.ENABLE_DISABLE_POPUP}`, request)
+  }
+
+  readOrgData(request: any) {
+    return this.http.post<any>(API_ENDPOINTS.READ_ORG_DETAILS, request)
   }
 
 }

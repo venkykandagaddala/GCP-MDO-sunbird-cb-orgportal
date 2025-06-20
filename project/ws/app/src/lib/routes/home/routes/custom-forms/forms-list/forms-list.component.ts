@@ -69,6 +69,22 @@ export class FormsListComponent implements OnInit, AfterViewInit {
       sortState: 'asc',
     }
     this.loadData()
+    this.getOrgDetails()
+  }
+
+  getOrgDetails() {
+    const request = {
+      request: { organisationId: this.rootOrgId },
+    }
+    this.customFieldsService.readOrgData(request).subscribe((res: any) => {
+      if (_.get(res, 'result.response.customfieldsdata.isPopupEnabled', false)) {
+        this.enabled = true
+      } else {
+        this.enabled = false
+      }
+    }, error => {
+      console.error('Error fetching organization details', error)
+    })
   }
 
   loadData() {
@@ -141,7 +157,7 @@ export class FormsListComponent implements OnInit, AfterViewInit {
       isEnabled: event.checked,
     }
     this.customFieldsService.updateCustomFieldStatus(payload).subscribe((res: any) => {
-      if (res.result && res.result.customFieldId === element.customFieldId) {
+      if (res.result && res.responseCode === 'OK') {
         this.loadData()
         this.matSnackBar.open(`Field status ${event.checked ? 'activated' : 'deactivated'} successfully!`)
       } else {
@@ -562,6 +578,20 @@ export class FormsListComponent implements OnInit, AfterViewInit {
 
   onToggle(event: any) {
     this.enabled = event.checked
-    console.log('Toggle event:', this.enabled)
+    const payoad: any = {
+      isPopupEnabled: this.enabled,
+      organisationId: this.rootOrgId
+    }
+    this.customFieldsService.updatePopup(payoad).subscribe((res: any) => {
+      if (res.result && res.responseCode === 'OK') {
+        this.matSnackBar.open(`Popup is ${event.checked ? 'enabled' : 'disabled'} successfully!`)
+      } else {
+        this.matSnackBar.open('Error while updating popup status')
+      }
+    }, (error: any) => {
+      console.log('error', error)
+      this.matSnackBar.open(_.get(error, 'error.params.err', 'Error while updating popup status'))
+    })
+
   }
 }
