@@ -29,7 +29,6 @@ export class PreviewComponent implements OnInit {
         next: (data: any) => {
           this.contentData = data.result.content
           this.contentLoaded = true
-          console.log(this.contentData)
           this.loaderService.changeLoaderState(false)
         },
         error: _err => {
