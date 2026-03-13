@@ -4,14 +4,17 @@
       <button mat-button type="button" class="create-cbp-btn" (click)="createNewTraining()">
         <div class="flex gap-2 items-center">
           <mat-icon class="training-upload-icon">upload</mat-icon>
-          <span>Add External Training Details</span>
+          <span>Upload External Training Details</span>
         </div>
       </button>
     </div>
     <mat-card-content>
       <!-- Search Bar -->
-      <div class="search-container margin-top-m">
-        <input class="sinput" type="text" placeholder="Search" [(ngModel)]="searchQuery" (keyup.enter)="searchTrainings(searchQuery)">
+      <div class="search mb-4">
+        <div class=rsearch>
+          <mat-icon class="search-icon">search</mat-icon>
+          <input class="sinput" type="Standard" label="" placeholder="Search trainings..." [(ngModel)]="searchQuery" (keydown.enter)="onSearch()">
+        </div>
       </div>
 
       <!-- Content Area -->
@@ -23,41 +26,44 @@
               *ngIf="externalTrainingsData?.length > 0">
 
               <!-- Training Name Column -->
-              <ng-container matColumnDef="trainingName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="trainingName">Training Name</th>
-                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.trainingName}}</td>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="name" class="col-training-name">Training
+                  Name</th>
+                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l col-training-name">
+                  {{element?.name}}</td>
               </ng-container>
 
               <!-- Provider Column -->
-              <ng-container matColumnDef="provider">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="provider">Provider</th>
-                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.provider}}</td>
-              </ng-container>
+              <!-- <ng-container matColumnDef="sourceName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="sourceName">Provider</th>
+                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.sourceName}}</td>
+              </ng-container> -->
 
               <!-- Delivery Mode Column -->
               <ng-container matColumnDef="deliveryMode">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="deliveryMode">Delivery Mode</th>
-                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.deliveryMode}}</td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="eventType">Delivery Mode</th>
+                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.eventType}}</td>
               </ng-container>
 
               <!-- Duration Column -->
               <ng-container matColumnDef="duration">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="duration">Duration</th>
-                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.duration}}</td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="durationFormatted">Duration</th>
+                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.durationFormatted}}</td>
               </ng-container>
 
-              <!-- Created At Column -->
-              <ng-container matColumnDef="createdAt">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">Created At</th>
-                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.createdAtFormatted}}</td>
+              <!-- Created On Column -->
+              <ng-container matColumnDef="createdOn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="createdOn">Created On</th>
+                <td mat-cell *matCellDef="let element" class="color-87 h-400-r-14-l">{{element?.createdOnFormatted}}
+                </td>
               </ng-container>
 
               <!-- Actions Column -->
               <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Action</th>
-                <td mat-cell *matCellDef="let element; let i = index">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;">Action</th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
                   <button mat-icon-button [matMenuTriggerFor]="actionMenu" [id]="'menu-trigger-' + i" (click)="prepareActions()">
-                    <mat-icon>more_vert</mat-icon>
+                    <mat-icon>more_horiz</mat-icon>
                   </button>
                   <mat-menu #actionMenu="matMenu">
                     <button class="external-traings-actions" mat-menu-item *ngFor="let action of currentRowActions; trackBy: trackByActionKey"

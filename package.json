@@ -49,9 +49,9 @@
     "@ngx-translate/http-loader": "8.0.0",
     "@polyflix/vtt-parser": "^1.4.0",
     "@project-sunbird/telemetry-sdk": "0.0.26",
-    "@sunbird-cb/collection": "0.0.1-cbrelease-4.8.29",
     "@sunbird-cb/access-settings": "0.0.4-cbrelease-4.8.33",
-    "@sunbird-cb/consumption": "0.0.1-cbrelease-4.8.33",
+    "@sunbird-cb/collection": "0.0.1-cbrelease-4.8.29",
+    "@sunbird-cb/consumption": "0.0.1-cbrelease-4.8.35",
     "@sunbird-cb/design-system": "0.0.3",
     "@sunbird-cb/discussion-v2": "0.0.8-cbrelease-4.8.28",
     "@sunbird-cb/micro-surveys": "2.0.20-ang-13-16",
@@ -140,7 +140,6 @@
     "@types/zip.js": "2.0.28",
     "angular-cli-alias": "^1.0.9",
     "codelyzer": "^6.0.0",
-
     "gzipper": "^2.8.1",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
@@ -162,6 +161,6 @@
     "webpack-bundle-analyzer": "^4.4.0"
   },
   "resolutions": {
-   "d3-selection": "^1.4.2"
+    "d3-selection": "1.4.2"
   }
 }

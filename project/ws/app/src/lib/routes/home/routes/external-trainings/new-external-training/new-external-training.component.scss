@@ -44,6 +44,13 @@
   }
 }
 
+.competency-label {
+  /* stylelint-disable-next-line */
+  font: 700 14px 'Montserrat';
+  margin-bottom: 8px;
+  color: #000;
+}
+
 .form-field {
   margin-bottom: 24px;
 
@@ -172,7 +179,7 @@
   }
 
   .certificate-card {
-    position: relative;
+    // position: relative;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -186,15 +193,15 @@
       height: 350px;
     }
 
-    .uploaded-logo {
-      position: absolute;
-      top: 14%;
-      left: 54%;
-      transform: translate(-50%, -50%);
-      max-width: 25px;
-      max-height: 25px;
-      z-index: 10;
-    }
+    // .uploaded-logo {
+    //   position: absolute;
+    //   top: 14%;
+    //   left: 54%;
+    //   transform: translate(-50%, -50%);
+    //   max-width: 25px;
+    //   max-height: 25px;
+    //   z-index: 10;
+    // }
   }
 }
 

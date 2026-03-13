@@ -24,6 +24,9 @@ export class TrainingViewComponent implements OnInit {
     const url = this.router.url
     if (url.endsWith('/batches')) {
       this.currentTab = 'batches'
+    } else if (url.endsWith('/create-batch')) {
+      this.createBatch()
+      this.currentTab = 'batches'
     } else {
       this.currentTab = 'details'
     }

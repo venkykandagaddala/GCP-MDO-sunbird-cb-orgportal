@@ -1,6 +1,6 @@
 <div class="external-training-container">
   <div class="header">
-    <button mat-icon-button class="back-button" (click)="goBack()">
+    <button mat-icon-button class="back-button" (click)="goBackToExternalTrainings()">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <div class="header-content">
@@ -36,9 +36,7 @@
           <label for="deliveryMode">Delivery Mode</label>
           <select id="deliveryMode" formControlName="deliveryMode" class="input-field select-field">
             <option value="">Select Delivery Mode</option>
-            <option value="online">Online</option>
-            <option value="offline">Offline</option>
-            <option value="hybrid">Hybrid</option>
+            <option *ngFor="let mode of deliveryModeList | keyvalue" [value]="mode.key">{{ mode.value }}</option>
           </select>
         </div>
 
@@ -53,10 +51,11 @@
           <label for="trainingType" class="required">Training Type</label>
           <select id="trainingType" formControlName="trainingType" class="input-field select-field">
             <option value="">Select Training Type</option>
-            <option value="workshop">Workshop</option>
-            <option value="seminar">Seminar</option>
-            <option value="certification">Certification</option>
-            <option value="course">Course</option>
+            <option value="Domestic Training">Domestic Training</option>
+            <option value="Foreign Training">Foreign Training</option>
+            <option value="In Service Training">In Service Training</option>
+            <option value="Mid-Career Training">Mid-Career Training</option>
+            <option value="Other Training">Other Training</option>
           </select>
         </div>
       </div>
@@ -74,40 +73,47 @@
         <div class="form-field form-field-half">
           <label for="partnerLogo">Partner Logo</label>
           <div class="file-upload-container">
-            <input type="text" [value]="selectedFileName || 'No file selected'" readonly class="input-field file-display" />
-            <div class="upload-section" *ngIf="!uploadedFileUrl" (click)="fileInput.click()" (keydown.enter)="fileInput.click()">
+            <input type="text" [value]="logoFileName || 'No file selected'" readonly class="input-field file-display" />
+            <div class="upload-section" *ngIf="!logoUploaded && !isLogoMerging" (click)="fileInput.click()" (keydown.enter)="fileInput.click()">
               <mat-icon>image_arrow_up</mat-icon>
               <span class="upload-text">Upload Logo</span>
             </div>
-            <button mat-icon-button class="cancel-upload-btn" *ngIf="uploadedFileUrl" (click)="removeUploadedFile()">
+            <div class="upload-section" *ngIf="isLogoMerging">
+              <span class="upload-text">Merging...</span>
+            </div>
+            <button mat-icon-button class="cancel-upload-btn" *ngIf="logoUploaded && !isLogoMerging" (click)="removeUploadedLogo()">
               <mat-icon>close</mat-icon>
             </button>
             <input #fileInput type="file" (change)="onFileSelected($event)" accept=".svg,image/svg+xml" style="display: none;" />
           </div>
         </div>
       </div>
-      <div class="certificate-preview" *ngIf="uploadedFileUrl">
+      <div class="certificate-preview">
         <div class="certificate-header">
           <span class="certificate-title">Certificate Preview</span>
           <mat-icon class="certificate-icon">visibility</mat-icon>
         </div>
         <div class="certificate-card">
-          <img class="certificate-img"
-            src="https://portal.uat.karmayogibharat.net/content-store/cios-icon/1772113322108_CourseCertificate_Template.svg"
-            alt="Certificate Preview" />
-          <img class="uploaded-logo" [src]="uploadedFileUrl" alt="Uploaded Logo" />
+          <img class="certificate-img" [src]="previewLogoUrl || defaultLogoUrl" alt="Certificate Preview" />
         </div>
       </div>
 
 
     </form>
 
+    <div class="flex pb-4 flex-col form-field">
+      <div class="competency-label required">Competencies</div>
+      <sb-uic-competency-list [showRoundControls]="true" (selectedCompetency)="onSelectedCompetencyChange($event)">
+      </sb-uic-competency-list>
+    </div>
+
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <button mat-stroked-button class="cancel-training-btn" (click)="onCancel()">
+      <button mat-stroked-button class="cancel-training-btn" (click)="goBackToExternalTrainings()">
         Cancel
       </button>
-      <button mat-raised-button color="primary" class="save-training-btn" [disabled]="!trainingForm.valid" (click)="onSubmit()">
+      <button mat-raised-button color="primary" class="save-training-btn" [disabled]="!trainingForm.valid || selectedCompetencyList.length === 0"
+        (click)="onSubmit()">
         Save Training Details
       </button>
     </div>

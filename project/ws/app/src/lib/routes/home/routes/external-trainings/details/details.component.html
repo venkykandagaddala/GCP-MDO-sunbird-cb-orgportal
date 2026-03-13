@@ -4,7 +4,7 @@
     <h2 class="training-title">{{ training.title }}</h2>
     <div class="info-grid">
       <div class="info-block">
-        <span class="info-label">LEARNING TYPE</span>
+        <span class="info-label">TRAINING TYPE</span>
         <span class="info-value">{{ training.learningType }}</span>
       </div>
       <div class="info-block">
@@ -16,9 +16,13 @@
         <span class="info-value">{{ training.learningHours }}</span>
       </div>
       <div class="info-block">
+        <span class="info-label">Training Type</span>
+        <span class="info-value">{{ training.categoryType }}</span>
+      </div>
+      <!-- <div class="info-block">
         <span class="info-label">PARTNER NAME</span>
         <span class="info-value">{{ training.partnerName }}</span>
-      </div>
+      </div> -->
     </div>
 
     <div class="objective-section">
@@ -28,7 +32,7 @@
   </div>
 
   <!-- Right Section - Certificate Preview -->
-  <div class="details-right">
+  <!-- <div class="details-right">
     <div class="certificate-header">
       <span class="certificate-title">Certificate Preview</span>
       <mat-icon class="certificate-icon">visibility</mat-icon>
@@ -37,45 +41,14 @@
       <img class="certificate-img" src="https://portal.uat.karmayogibharat.net/content-store/cios-icon/1772113322108_CourseCertificate_Template.svg"
         alt="Certificate Preview" />
     </div>
-  </div>
+  </div> -->
 </div>
 <div class="details-wrapper">
   <!-- Left Section -->
   <div class="details-left">
-    <div class="flex new-mobile" *ngIf="training?.competency_v6 && training?.competency_v6?.length > 0">
-      <div class="flex-1">
-        <div *ngIf="isTableExpanded">
-          <table aria-label="Competencies" class="compt-table width-1-1 text-left">
-            <tr>
-              <th class="padding-xs mat-body-1 bold-text font-bold">Area</th>
-              <th class="padding-xs mat-body-1 bold-text font-bold">Theme</th>
-              <th class="padding-xs mat-body-1 flex justify-between bold-text font-bold">
-                Sub theme
-              </th>
-            </tr>
-            <ng-container *ngIf="listView">
-              <ng-container *ngFor="let area of uniqueAreas">
-                <ng-container *ngFor="let theme of getUniqueThemesForArea(area); let i = index">
-                  <ng-container *ngFor="let subtheme of getSubthemesForAreaAndTheme(area, theme); let j = index">
-                    <tr>
-                      <td class="padding-xs mat-body-1 cursor-pointer" *ngIf="i === 0 && j === 0" [attr.rowspan]="getTotalRowsForArea(area)">
-                        {{ area }}
-                      </td>
-                      <td class="padding-xs mat-body-1 cursor-pointer" *ngIf="j === 0"
-                        [attr.rowspan]="getSubthemesForAreaAndTheme(area, theme).length">
-                        {{ theme }}
-                      </td>
-                      <td class="padding-xs mat-body-1 cursor-pointer">
-                        {{ subtheme }}
-                      </td>
-                    </tr>
-                  </ng-container>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-          </table>
-        </div>
-      </div>
+    <div class="flex new-mobile w-full" *ngIf="training?.competency_v6 && training?.competency_v6?.length > 0">
+      <sb-uic-competency-list class="w-full" [selectedCompetencies]="training?.competency_v6" [showCompetencyAdd]="false">
+      </sb-uic-competency-list>
     </div>
   </div>
 </div>
