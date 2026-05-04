@@ -215,7 +215,7 @@ describe('IapComponent', () => {
 
     it('should handle error callback silently', () => {
       mockActivatedRoute.data = {
-        subscribe: jest.fn((success: any, error: any) => error && error()),
+        subscribe: jest.fn((_success: any, error: any) => error?.()),
       }
       expect(() => component.ngOnInit()).not.toThrow()
     })
@@ -423,6 +423,90 @@ describe('IapComponent', () => {
       component.raiseEvent('Loaded' as any, makeContent() as any)
       const arg = mockEventSvc.dispatchEvent.mock.calls[0][0]
       expect(arg.from).toBe('iap')
+    })
+
+    it('should set identifier=null and url=null when data is null', () => {
+      component.forPreview = false
+      component.raiseEvent('Loaded' as any, null as any)
+      const arg = mockEventSvc.dispatchEvent.mock.calls[0][0]
+      expect(arg.data.identifier).toBeNull()
+      expect(arg.data.url).toBeNull()
+    })
+  })
+
+  // ─── setS3Cookie error handling ───────────────────────────────────────────
+  describe('setS3Cookie error handling', () => {
+    it('should not throw when setS3Cookie rejects (preview mode)', async () => {
+      mockContentSvc.setS3Cookie = jest.fn().mockReturnValue({
+        toPromise: () => Promise.reject(new Error('cookie error')),
+      })
+      mockActivatedRoute.snapshot.queryParamMap.get = jest.fn(k => k === 'preview' ? 'true' : null)
+      expect(() => component.ngOnInit()).not.toThrow()
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect(component.isFetchingDataComplete).toBe(true)
+    })
+
+    it('should not throw when setS3Cookie rejects (normal route)', async () => {
+      mockContentSvc.setS3Cookie = jest.fn().mockReturnValue({
+        toPromise: () => Promise.reject(new Error('cookie error')),
+      })
+      mockActivatedRoute.snapshot.queryParamMap.get = jest.fn().mockReturnValue(null)
+      mockActivatedRoute.data = of({ content: { data: makeContent() } })
+      expect(() => component.ngOnInit()).not.toThrow()
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect(component.isFetchingDataComplete).toBe(true)
+    })
+  })
+
+  // ─── ngOnInit - normal route: no identifier ───────────────────────────────
+  describe('ngOnInit - normal route: content with no identifier', () => {
+    it('should not set responseSubscription when iapData has no identifier', async () => {
+      mockActivatedRoute.snapshot.queryParamMap.get = jest.fn().mockReturnValue(null)
+      mockActivatedRoute.data = of({
+        content: { data: makeContent({ identifier: '' }) },
+      })
+      component.ngOnInit()
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect((component as any).responseSubscription).toBeFalsy()
+    })
+  })
+
+  // ─── message event filter edge cases ─────────────────────────────────────
+  describe('message event filter edge cases', () => {
+    const setupWithHandlers = async () => {
+      component.forPreview = false
+      mockActivatedRoute.snapshot.queryParamMap.get = jest.fn().mockReturnValue(null)
+      mockActivatedRoute.data = of({ content: { data: makeContent() } })
+      const handlers: Function[] = []
+      const origAdd = window.addEventListener.bind(window)
+      jest.spyOn(window, 'addEventListener').mockImplementation((type: any, handler: any, opts?: any) => {
+        if (type === 'message') { handlers.push(handler) }
+        origAdd(type, handler, opts)
+      })
+      component.ngOnInit()
+      await new Promise(resolve => setTimeout(resolve, 0))
+      return handlers
+    }
+
+    it('should ignore message event where source has no postMessage', async () => {
+      const handlers = await setupWithHandlers()
+      const mockEvent = { data: { requestId: 'LOADED', subApplicationName: 'IAP' }, source: {} }
+      handlers.forEach(h => h(mockEvent))
+      expect(mockRespondSvc.loadedRespond).not.toHaveBeenCalled()
+    })
+
+    it('should ignore message event where event.data is falsy', async () => {
+      const handlers = await setupWithHandlers()
+      const mockEvent = { data: null, source: { postMessage: jest.fn() } }
+      handlers.forEach(h => h(mockEvent))
+      expect(mockRespondSvc.loadedRespond).not.toHaveBeenCalled()
+    })
+
+    it('should ignore message event where requestId is absent', async () => {
+      const handlers = await setupWithHandlers()
+      const mockEvent = { data: { subApplicationName: 'IAP' }, source: { postMessage: jest.fn() } }
+      handlers.forEach(h => h(mockEvent))
+      expect(mockRespondSvc.loadedRespond).not.toHaveBeenCalled()
     })
   })
 })
